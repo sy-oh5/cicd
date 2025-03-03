@@ -17,18 +17,15 @@ jobs:
 
     #step: 작업을 수행할 가장 작은 단위
     steps:
-      - name: Hello world 찍기
-        run: echo "hello world"
-
-      - name: 여러 명령어 문장 작성
-        run: |
-          echo "Good"
-          echo "Morning"
-
-      - name: Github Actions 자체에 저장되어 있는 변수 사용해보기
-        run: |
-          echo $GITHUB_SHA
-          echo $GITHUB_REPOSITORY
-
-      - name: 아무한테 노출되면 안되는 값
-        run: echo ${{secrets.MY_NAME}} #세팅에 정의
+      - name: ssh 원격 접속
+        # library 사용
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{secrets.HOST}}
+          script_stop: true
+          script: |
+            cd/home/cicd
+            git pull
+            ./gradlew clean build      
+            fuser -k -n tcp 8080 || true
+            nohup java -jar build/libs/*SNAPSHOT.jar > ./output.log 2>&1 &
