@@ -21,11 +21,13 @@ jobs:
         # library 사용
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{secrets.HOST}}
+          host: ${{secrets.EC2_HOST}}
+          username: ${{secrets.EC2_USERNAME}}
+          key: ${{secrets.EC2_PRIVATE_KEY}}
           script_stop: true
           script: |
-            cd/home/cicd
-            git pull
+            cd /home/cicd
+            git pull origin main
             ./gradlew clean build      
-            fuser -k -n tcp 8080 || true
+            sudo fuser -k -n tcp 8080 || true
             nohup java -jar build/libs/*SNAPSHOT.jar > ./output.log 2>&1 &
