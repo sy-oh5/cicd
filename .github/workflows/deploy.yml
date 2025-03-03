@@ -1,14 +1,21 @@
+# workflow 이름
+# 1 workflow = 1 yml
 name: Github Actions 실행시키기
 
+# event : 실행되는 시점 - main
 on:
   push:
     branches:
       - main
 
+# 1개 이상의 job으로 구성 (병렬)
 jobs:
+  # job id
   My-Deploy-Job:
+    # 실행시킬 서버
     runs-on: ubuntu-latest
 
+    #step: 작업을 수행할 가장 작은 단위
     steps:
       - name: Hello world 찍기
         run: echo "hello world"
@@ -24,4 +31,4 @@ jobs:
           echo $GITHUB_REPOSITORY
 
       - name: 아무한테 노출되면 안되는 값
-        run: echo ${{secrets.MY_NAME}}
+        run: echo ${{secrets.MY_NAME}} #세팅에 정의
